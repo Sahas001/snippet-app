@@ -13,7 +13,7 @@ import (
 
 type application struct {
 	errorLog *log.Logger
-	infoLog *log.Logger
+	infoLog  *log.Logger
 	snippets *models.SnippetModel
 }
 
@@ -21,9 +21,7 @@ func main() {
 
 	addr := flag.String("addr", ":8080", "HTTP network address")
 	dsn := flag.String("dsn", "web:pass@/snippetbox?parseTime=true", "MySQL data source name")
-
 	flag.Parse()
-
 
 	infoLog := log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
 	errorLog := log.New(os.Stderr, "ERROR\t", log.Ldate|log.Ltime|log.Lshortfile)
@@ -35,18 +33,17 @@ func main() {
 
 	defer db.Close()
 
-	app:= &application {
+	app := &application{
 		errorLog: errorLog,
-		infoLog: infoLog,
+		infoLog:  infoLog,
 		snippets: &models.SnippetModel{DB: db},
 	}
 
 	server := &http.Server{
 		Addr:     *addr,
 		ErrorLog: errorLog,
-		Handler: app.routes(),
+		Handler:  app.routes(),
 	}
-
 
 	infoLog.Printf("Starting server on :%s", *addr)
 
@@ -54,7 +51,7 @@ func main() {
 	errorLog.Fatal(err)
 }
 
-func openDB (dsn string) (*sql.DB, error) {
+func openDB(dsn string) (*sql.DB, error) {
 	db, err := sql.Open("mysql", dsn)
 	if err != nil {
 		return nil, err
